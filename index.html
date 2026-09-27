@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Toko Bangunan Vera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F1ECE1;
+    --paper-2: #E7DFCF;
+    --card: #FFFFFF;
+    --ink: #221F1C;
+    --ink-soft: #59524A;
+    --brick: #9C4A34;
+    --brick-dark: #7A3A29;
+    --safety: #D89A2A;
+    --steel: #4C5A63;
+    --line: rgba(34,31,28,0.14);
+    --good: #3E7A4B;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-sizing: border-box;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #1B1815;
+      --paper-2: #242019;
+      --card: #26221D;
+      --ink: #F1ECE1;
+      --ink-soft: #C7BFB2;
+      --brick: #C6694D;
+      --brick-dark: #E08A6C;
+      --safety: #E9B857;
+      --steel: #9AA7AF;
+      --line: rgba(241,236,225,0.14);
+      --good: #6FBE7F;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1815;
+    --paper-2: #242019;
+    --card: #26221D;
+    --ink: #F1ECE1;
+    --ink-soft: #C7BFB2;
+    --brick: #C6694D;
+    --brick-dark: #E08A6C;
+    --safety: #E9B857;
+    --steel: #9AA7AF;
+    --line: rgba(241,236,225,0.14);
+    --good: #6FBE7F;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    font-size: 15.5px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3,h4 { font-family: 'Archivo', sans-serif; margin: 0; line-height: 1.1; color: var(--ink); }
+  p { margin: 0 0 .8em 0; }
+  a { color: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+  img, svg { display: block; max-width: 100%; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  /* ---- Header / signboard ---- */
+  header.top {
+    background: var(--ink);
+    color: var(--paper);
+    padding-top: env(safe-area-inset-top, 0px);
+    position: sticky; top: 0; z-index: 40;
+    border-bottom: 4px solid var(--brick);
+  }
+  .signboard {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 26px 20px; max-width: 1080px; margin: 0 auto; gap: 14px; flex-wrap: wrap;
+  }
+  .brandmark { display: flex; align-items: center; gap: 18px; }
+  .brandmark .badge {
+    width: 64px; height: 64px; border-radius: 14px; background: var(--brick);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .brandmark .badge svg { width: 36px; height: 36px; stroke: #fff; }
+  .brandmark .name { font-family: 'Archivo'; font-weight: 800; font-size: 1.9rem; letter-spacing: -0.01em; color: var(--paper); }
+  .brandmark .tag { font-size: .92rem; color: var(--paper-2); opacity: .8; margin-top: 2px; }
+
+  nav.tabs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 20px 20px; max-width: 1080px; margin: 0 auto; scrollbar-width: none; }
+  nav.tabs::-webkit-scrollbar { display: none; }
+  nav.tabs button {
+    background: transparent; border: 1px solid rgba(241,236,225,0.22); color: var(--paper);
+    padding: 11px 20px; border-radius: 999px; font-size: .95rem; font-weight: 600; white-space: nowrap;
+    display: flex; align-items: center; gap: 7px; transition: background .15s, border-color .15s;
+  }
+  nav.tabs button .n { font-family: 'Archivo'; font-weight: 700; opacity: .55; font-size: .78rem; }
+  nav.tabs button.active { background: var(--brick); border-color: var(--brick); }
+  nav.tabs button:not(.active):hover { border-color: rgba(241,236,225,0.5); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 44px 20px 90px; }
+  section.panel { display: none; }
+  section.panel.active { display: block; animation: rise .38s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .eyebrow { font-size: .8rem; color: var(--brick); font-weight: 600; margin-bottom: 10px; }
+  h2.title { font-size: clamp(1.7rem, 3.4vw, 2.5rem); font-weight: 800; letter-spacing: -0.015em; margin-bottom: 16px; max-width: 16ch; }
+  .lede { color: var(--ink-soft); max-width: 58ch; font-size: 1.02rem; }
+
+  /* ---- Sejarah ---- */
+  .history-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 44px; align-items: start; margin-top: 28px; }
+  @media (max-width: 820px) { .history-grid { grid-template-columns: 1fr; } }
+  .story p { color: var(--ink-soft); }
+  .photo-stack { display: grid; gap: 16px; }
+  .photo {
+    aspect-ratio: 4/3; border-radius: 14px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--paper-2), var(--card));
+    border: 1px solid var(--line);
+    display: flex; align-items: flex-end; padding: 14px;
+  }
+  .photo.small { aspect-ratio: 16/9; }
+  .photo::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(45deg, rgba(34,31,28,0.045) 0 2px, transparent 2px 18px);
+  }
+  .photo .cap { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; background: var(--ink); color: var(--paper); padding: 6px 11px; border-radius: 999px; font-size: .74rem; font-weight: 600; }
+  .photo .cap svg { width: 14px; height: 14px; stroke: var(--paper); }
+  .photo .placeholder-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-58%); opacity: .28; }
+  .photo .placeholder-icon svg { width: 54px; height: 54px; stroke: var(--ink); }
+  .photo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+
+  .timeline { margin-top: 40px; border-top: 1px solid var(--line); padding-top: 28px; }
+  .timeline h3 { font-size: 1rem; margin-bottom: 18px; }
+  .tl-row { display: grid; grid-template-columns: 90px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px dashed var(--line); }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-year { font-family: 'Archivo'; font-weight: 800; color: var(--brick); font-size: 1.05rem; }
+  .tl-text { color: var(--ink-soft); font-size: .93rem; }
+  .tl-text b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Owner ---- */
+  .owner-grid { display: grid; grid-template-columns: 320px 1fr; gap: 40px; margin-top: 28px; align-items: start; }
+  @media (max-width: 780px) { .owner-grid { grid-template-columns: 1fr; } }
+  .owner-photo {
+    aspect-ratio: 3/4; border-radius: 16px; background: linear-gradient(160deg, var(--paper-2), var(--card));
+    border: 1px solid var(--line); position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .owner-photo::before { content:""; position:absolute; inset:0; background-image: repeating-linear-gradient(45deg, rgba(34,31,28,0.045) 0 2px, transparent 2px 18px); }
+  .owner-photo svg { width: 76px; height: 76px; stroke: var(--ink); opacity: .3; position: relative; z-index:1; }
+  .owner-photo .cap { position: absolute; bottom: 14px; left: 14px; z-index:1; background: var(--ink); color: var(--paper); padding: 6px 11px; border-radius: 999px; font-size: .74rem; font-weight: 600; }
+
+  .biodata { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 4px 0; margin: 22px 0; }
+  .biodata .row { display: grid; grid-template-columns: 140px 1fr; gap: 10px; padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: .92rem; }
+  .biodata .row:last-child { border-bottom: none; }
+  .biodata .row span:first-child { color: var(--ink-soft); }
+  .biodata .row span:last-child { font-weight: 600; }
+
+  .quote { border-left: 3px solid var(--brick); padding: 4px 0 4px 16px; color: var(--ink-soft); font-style: italic; margin: 18px 0; }
+
+  .owner-divider { border-top: 1px solid var(--line); margin: 44px 0; }
+
+  /* ---- Produk ---- */
+  .catalog-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 24px 0 20px; }
+  .search-box { position: relative; flex: 1; min-width: 220px; }
+  .search-box input {
+    width: 100%; padding: 11px 14px 11px 38px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--card); color: var(--ink); font-size: .92rem; font-family: inherit;
+  }
+  .search-box input:focus { outline: 2px solid var(--brick); outline-offset: 1px; }
+  .search-box svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; stroke: var(--ink-soft); }
+
+  .chips { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 22px; }
+  .chip {
+    border: 1px solid var(--line); background: var(--card); color: var(--ink-soft);
+    padding: 6px 13px; border-radius: 999px; font-size: .8rem; font-weight: 600;
+  }
+  .chip.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; }
+  .p-card { border: 1px solid var(--line); background: var(--card); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+  .p-photo { aspect-ratio: 4/3; background: var(--paper-2); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .p-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .p-photo svg { width: 30px; height: 30px; stroke: var(--brick); opacity: .45; }
+  .p-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .p-cat { font-size: .68rem; text-transform: none; color: var(--steel); font-weight: 600; }
+  .p-name { font-weight: 700; font-size: .93rem; line-height: 1.3; min-height: 2.4em; }
+  .p-price { font-family: 'Archivo'; font-weight: 800; color: var(--brick-dark); font-size: 1.02rem; margin-top: auto; }
+  .p-price small { font-family: 'IBM Plex Sans'; font-weight: 500; color: var(--ink-soft); font-size: .72rem; }
+  .p-actions { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .stepper { display: flex; align-items: center; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .stepper button { background: var(--paper-2); border: none; width: 28px; height: 30px; font-size: 1rem; color: var(--ink); }
+  .stepper .qty-input {
+    width: 52px; height: 30px; border: none; border-left: 1px solid var(--line); border-right: 1px solid var(--line);
+    background: var(--card); color: var(--ink); text-align: center; font-family: inherit; font-weight: 700; font-size: .85rem;
+    padding: 0; border-radius: 0; -moz-appearance: textfield; appearance: textfield;
+  }
+  .stepper .qty-input::-webkit-outer-spin-button,
+  .stepper .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .stepper .qty-input:focus { outline: 2px solid var(--brick); outline-offset: -2px; }
+  .add-btn { flex: 1; background: var(--ink); color: var(--paper); border: none; border-radius: 8px; height: 30px; font-size: .78rem; font-weight: 700; }
+  .add-btn:hover { background: var(--brick); }
+  .disc-badge { position: absolute; top: 8px; left: 8px; z-index: 2; background: var(--brick); color: #fff; font-family: 'Archivo'; font-weight: 800; font-size: .74rem; padding: 3px 9px; border-radius: 999px; }
+  .old-price { display: block; font-family: 'IBM Plex Sans'; font-weight: 500; font-size: .74rem; color: var(--ink-soft); text-decoration: line-through; }
+  .ci-unit s { opacity: .7; margin-left: 4px; }
+  .sum-row.saving { color: var(--good); font-weight: 600; }
+  .no-results { grid-column: 1/-1; text-align: center; padding: 40px 0; color: var(--ink-soft); }
+  .bulk-hint { font-size: .7rem; color: var(--ink-soft); line-height: 1.35; }
+  .bulk-hint.active { color: var(--good); font-weight: 600; }
+
+  .float-cart {
+    position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 50;
+    background: var(--ink); color: var(--paper); border: none; border-radius: 999px;
+    padding: 12px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.28);
+    font-weight: 700; font-size: .85rem;
+  }
+  .float-cart svg { width: 18px; height: 18px; stroke: var(--paper); }
+  .float-cart .count { background: var(--brick); color: #fff; border-radius: 999px; padding: 1px 8px; font-size: .74rem; }
+  .float-cart.hide { display: none; }
+
+  /* ---- Keranjang (tab sendiri) ---- */
+  .cart-section { border-top: none; margin-top: 0; padding-top: 0; }
+  .cart-layout { display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; margin-top: 26px; align-items: start; }
+  @media (max-width: 820px) { .cart-layout { grid-template-columns: 1fr; } }
+  .cart-list { display: flex; flex-direction: column; gap: 10px; }
+  .cart-empty { border: 1px dashed var(--line); border-radius: 14px; padding: 40px 20px; text-align: center; color: var(--ink-soft); }
+  .cart-item { display: grid; grid-template-columns: 40px 1fr auto auto; gap: 12px; align-items: center; border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 10px 12px; }
+  .cart-item .ci-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--paper-2); display: flex; align-items: center; justify-content: center; }
+  .cart-item .ci-icon svg { width: 18px; height: 18px; stroke: var(--brick); }
+  .cart-item .ci-name { font-weight: 600; font-size: .87rem; }
+  .cart-item .ci-unit { font-size: .74rem; color: var(--ink-soft); }
+  .cart-item .ci-sub { font-family: 'Archivo'; font-weight: 700; font-size: .87rem; white-space: nowrap; }
+  .ci-remove { background: none; border: none; color: var(--ink-soft); font-size: 1.1rem; line-height: 1; padding: 4px; }
+  .ci-remove:hover { color: var(--brick); }
+
+  .summary-box { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 20px; position: sticky; top: 190px; }
+  .summary-box h3 { font-size: .98rem; margin-bottom: 14px; }
+  .sum-row { display: flex; justify-content: space-between; font-size: .88rem; padding: 6px 0; color: var(--ink-soft); }
+  .sum-row.total { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 12px; font-weight: 800; color: var(--ink); font-size: 1.05rem; font-family: 'Archivo'; }
+
+  .field-group { margin: 4px 0 14px; }
+  .field-group label { display: block; font-size: .78rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  .field-group input {
+    width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; font-family: inherit;
+    font-size: .88rem; background: var(--paper-2); color: var(--ink);
+  }
+  .field-group input:focus { outline: 2px solid var(--brick); outline-offset: 1px; }
+  .field-error { border-color: var(--brick) !important; }
+
+  .fulfil-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 4px 0 16px; }
+  .fulfil-opt { border: 1px solid var(--line); border-radius: 10px; padding: 11px 10px; display: flex; align-items: center; gap: 8px; background: var(--paper-2); }
+  .fulfil-opt input { accent-color: var(--brick); width: 16px; height: 16px; flex-shrink: 0; }
+  .fulfil-opt label { font-weight: 600; font-size: .84rem; flex: 1; cursor: pointer; }
+  .fulfil-opt.checked { border-color: var(--brick); background: color-mix(in srgb, var(--brick) 10%, var(--card)); }
+
+  .pay-methods { display: grid; gap: 9px; margin: 16px 0; }
+  .pay-opt { border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; background: var(--paper-2); }
+  .pay-opt input { accent-color: var(--brick); width: 16px; height: 16px; }
+  .pay-opt label { font-weight: 600; font-size: .87rem; flex: 1; cursor: pointer; }
+  .pay-opt.checked { border-color: var(--brick); background: color-mix(in srgb, var(--brick) 10%, var(--card)); }
+
+  .pay-detail { border: 1px dashed var(--line); border-radius: 10px; padding: 14px; font-size: .82rem; color: var(--ink-soft); margin-bottom: 14px; display: none; }
+  .pay-detail.show { display: block; }
+  .qr-box { width: 100%; max-width: 240px; height: auto; margin: 0 auto 10px; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: #fff; cursor: zoom-in; }
+  .qr-box img { width: 100%; height: auto; display: block; }
+  .qr-box.qr-missing {
+    cursor: default; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center;
+    background: var(--paper-2); color: var(--ink-soft); font-size: .8rem; text-align: center; padding: 16px;
+  }
+  .qr-box.qr-missing::after { content: "Gambar QRIS belum tersedia"; }
+
+  .checkout-btn { width: 100%; background: var(--brick); color: #fff; border: none; border-radius: 10px; padding: 13px; font-weight: 700; font-size: .92rem; }
+  .checkout-btn:hover { background: var(--brick-dark); }
+  .checkout-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .cart-note { font-size: .74rem; color: var(--ink-soft); margin-top: 10px; text-align: center; }
+
+  .receipt { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 20px; margin-top: 18px; display: none; }
+  .receipt.show { display: block; }
+  .receipt h4 { font-size: .92rem; margin-bottom: 4px; }
+  .receipt .rid { font-size: .74rem; color: var(--ink-soft); margin-bottom: 12px; }
+  .receipt .r-row { display: flex; justify-content: space-between; font-size: .82rem; padding: 5px 0; border-bottom: 1px dashed var(--line); }
+  .receipt .r-total { font-weight: 800; font-family: 'Archivo'; display: flex; justify-content: space-between; padding-top: 10px; font-size: .98rem; }
+  .receipt .r-badge { display: inline-flex; align-items: center; gap: 6px; background: color-mix(in srgb, var(--good) 15%, var(--card)); color: var(--good); padding: 4px 10px; border-radius: 999px; font-size: .74rem; font-weight: 700; margin-top: 10px; }
+  .receipt .r-info { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; }
+  .receipt .r-info .r-row { border-bottom: none; padding: 3px 0; }
+
+  .waiting-question { font-weight: 600; font-size: .9rem; margin: 16px 0 10px; text-align: center; }
+  .waiting-actions { display: grid; gap: 8px; }
+  .btn-secondary { width: 100%; background: transparent; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-weight: 600; font-size: .87rem; }
+  .btn-secondary:hover { border-color: var(--brick); color: var(--brick); }
+
+  .result-title { font-family: 'Archivo'; font-weight: 900; font-size: 1.3rem; text-align: center; padding: 8px 0 4px; }
+  .result-title.success { color: var(--good); }
+  .result-title.fail { color: var(--brick-dark); }
+  #resultFail { text-align: center; }
+  #resultFail p { margin: 10px 0 16px; }
+
+  /* ---- Rating ---- */
+  .rating-summary { display: grid; grid-template-columns: auto 1fr; gap: 36px; align-items: center; margin: 26px 0 34px; }
+  @media (max-width: 620px) { .rating-summary { grid-template-columns: 1fr; text-align: center; } }
+  .avg-num { font-family: 'Archivo'; font-weight: 900; font-size: 3.6rem; line-height: 1; color: var(--ink); }
+  .avg-stars { color: var(--safety); font-size: 1.2rem; margin: 6px 0; }
+  .avg-sub { font-size: .8rem; color: var(--ink-soft); }
+  .bars { display: flex; flex-direction: column; gap: 6px; }
+  .bar-row { display: grid; grid-template-columns: 40px 1fr 30px; gap: 8px; align-items: center; font-size: .78rem; color: var(--ink-soft); }
+  .bar-track { height: 7px; background: var(--paper-2); border-radius: 999px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--safety); }
+
+  .review-form { border: 1px solid var(--line); background: var(--card); border-radius: 14px; padding: 20px; margin-bottom: 28px; }
+  .review-form h3 { font-size: 1rem; margin-bottom: 14px; }
+  .star-pick { display: flex; gap: 6px; margin-bottom: 14px; }
+  .star-pick button { background: none; border: none; font-size: 1.7rem; color: var(--line); line-height: 1; padding: 0; }
+  .star-pick button.on { color: var(--safety); }
+  .review-form input, .review-form textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; font-family: inherit;
+    font-size: .88rem; background: var(--paper-2); color: var(--ink); margin-bottom: 10px;
+  }
+  .review-form textarea { min-height: 78px; resize: vertical; }
+  .review-form button.submit { background: var(--ink); color: var(--paper); border: none; border-radius: 9px; padding: 11px 18px; font-weight: 700; font-size: .85rem; }
+  .review-form button.submit:hover { background: var(--brick); }
+
+  .review-list { display: flex; flex-direction: column; gap: 12px; }
+  .review { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 15px 16px; }
+  .review .r-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .review .r-name { font-weight: 700; font-size: .88rem; }
+  .review .r-stars { color: var(--safety); font-size: .85rem; letter-spacing: 1px; }
+  .review .r-text { color: var(--ink-soft); font-size: .87rem; }
+  .review .r-tag { font-size: .7rem; color: var(--steel); margin-top: 6px; }
+
+  footer.site {
+    border-top: 1px solid var(--line); margin-top: 40px; padding: 30px 20px 50px;
+    background: var(--paper-2);
+  }
+  .foot-grid { max-width: 1080px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
+  .foot-grid .b { font-family:'Archivo'; font-weight: 800; margin-bottom: 6px; }
+  .foot-grid .s { font-size: .82rem; color: var(--ink-soft); }
+  .foot-grid div { min-width: 180px; }
+
+  /* ---- Dokumentasi Akhir ---- */
+  .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 28px; }
+  .doc-card { aspect-ratio: 4/3; }
+  .doc-section-title { font-size: 1rem; margin: 34px 0 4px; }
+  .doc-section-title:first-of-type { margin-top: 0; }
+  .doc-sub { color: var(--ink-soft); font-size: .85rem; margin-bottom: 4px; }
+  .doc-name-input {
+    position: relative; z-index: 1; width: 100%; background: rgba(0,0,0,.55); color: #fff; border: none;
+    padding: 7px 10px; font-family: inherit; font-size: .78rem; font-weight: 600; border-radius: 8px;
+  }
+  .doc-name-input::placeholder { color: rgba(255,255,255,.65); }
+  .doc-name-input:focus { outline: 2px solid var(--safety); }
+
+  /* ---- Pratinjau gambar (lightbox) ---- */
+  .photo:has(img), .owner-photo:has(img), .p-photo:has(img) { cursor: zoom-in; }
+  .photo-img ~ .placeholder-icon { display: none; }
+  .lightbox {
+    position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.9);
+    display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    padding: calc(56px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 8px; background: #000; }
+  .lightbox .lb-cap { color: #fff; font-size: .9rem; text-align: center; }
+  .lightbox .lb-close {
+    position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: 16px;
+    width: 42px; height: 42px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,.16); color: #fff; font-size: 1.6rem; line-height: 1;
+  }
+
+  .sr-only { position: absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+  :focus-visible { outline: 2px solid var(--brick); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<symbol id="ic-brick" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="8" height="6"/><rect x="13" y="7" width="8" height="6"/><rect x="7" y="13" width="8" height="6"/><line x1="3" y1="13" x2="7" y2="13"/><line x1="15" y1="13" x2="21" y2="13"/></symbol>
+<symbol id="ic-bucket" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-2 11H7L5 8z"/><path d="M3 8h18"/><path d="M9 8V5a3 3 0 0 1 6 0v3"/><path d="M9 13c0 1.5 1 2 1.5 2.5"/></symbol>
+<symbol id="ic-nail" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5h12v3H6z"/><line x1="12" y1="8" x2="12" y2="20"/><path d="M12 20l-2.4-3"/><path d="M12 20l2.4-3"/></symbol>
+<symbol id="ic-wrench" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 1 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2z"/></symbol>
+<symbol id="ic-bolt" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 4 14h6l-1 7 9-11h-6l1-7z"/></symbol>
+<symbol id="ic-drop" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9.5 12l1.8 1.8L15 10"/></symbol>
+<symbol id="ic-camera" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+<symbol id="ic-store" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10 5 4h14l1 6"/><path d="M4 10v9h16v-9"/><path d="M9 19v-6h6v6"/><path d="M4 10a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"/></symbol>
+<symbol id="ic-user" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></symbol>
+<symbol id="ic-cart" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M2 3h2l2.4 12.2a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21 7H6"/></symbol>
+<symbol id="ic-search" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><line x1="16" y1="16" x2="21" y2="21"/></symbol>
+<symbol id="ic-star" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.7-4.3 4.1 1.1 5.9-5.3-2.9-5.3 2.9 1.1-5.9-4.3-4.1 5.9-.7z"/></symbol>
+<symbol id="ic-doc" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l5 5v13H6z"/><path d="M14 3v5h5"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></symbol>
+</defs>
+</svg>
+
+<header class="top">
+  <div class="signboard">
+    <div class="brandmark">
+      <div class="badge"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-store"/></svg></div>
+      <div>
+        <div class="name">Toko Bangunan Vera</div>
+        <div class="tag">Lengkap &middot; Harga Bersahabat &middot; Sejak 2012</div>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button class="active" data-target="sejarah">Sejarah</button>
+    <button data-target="owner">Owner</button>
+    <button data-target="produk">Produk</button>
+    <button data-target="keranjang">Keranjang</button>
+    <button data-target="rating">Rating</button>
+    <button data-target="dokumentasi">Dokumentasi</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ 01 SEJARAH ============ -->
+  <section class="panel active" id="sejarah">
+    <div class="eyebrow">Cerita Kami</div>
+    <h2 class="title">Berdiri menjawab pertumbuhan pembangunan Kalianda</h2>
+    <div class="history-grid">
+      <div class="story">
+        <p class="lede">TB Vera didirikan untuk merespons pertumbuhan pembangunan infrastruktur dan pemukiman yang terus berkembang di wilayah Lampung Selatan, khususnya di ibu kota kabupaten, Kalianda. Dengan memilih lokasi di sepanjang Jalan Lintas Sumatra (Jalan Trans Sumatra), toko ini berada di jalur logistik utama yang sangat strategis. Letak ini memudahkan akses distribusi material, baik dari penyuplai besar maupun bagi konsumen yang membutuhkan angkutan bahan bangunan dalam volume besar.</p>
+        <p>Selain melayani penjualan eceran layaknya toko bangunan konvensional, TB Vera mengukuhkan posisinya sebagai leveransir (pemasok/supplier) resmi.</p>
+      </div>
+      <div class="photo-stack">
+        <div class="photo">
+          <img src="bangunan.jpeg" class="photo-img" alt="Foto bangunan toko">
+          <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg></div>
+          <div class="cap"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg> Foto bangunan toko</div>
+        </div>
+        <div class="photo small">
+           <img src="sama owner.jpeg" class="photo-img" alt="Dokumentasi bersama owner">
+          <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg></div>
+          <div class="cap"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg> Dokumentasi bersama owner</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <h3>Peran Sebagai Leveransir</h3>
+      <div class="tl-row"><div class="tl-year">&#9776;</div><div class="tl-text">Menyuplai material dalam <b>skala besar untuk proyek-proyek konstruksi</b> swasta maupun pemerintah di wilayah Kalianda dan sekitarnya.</div></div>
+      <div class="tl-row"><div class="tl-year">&#9776;</div><div class="tl-text">Menyediakan kebutuhan <b>material dasar</b> (semen, pasir, besi, batu, baja ringan) serta <b>perlengkapan finishing bangunan</b> secara grosir.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 OWNER ============ -->
+  <section class="panel" id="owner">
+    <div class="eyebrow">Kenalan Yuk</div>
+    <h2 class="title">Owner di balik Toko Bangunan Vera</h2>
+    <div class="owner-grid">
+      <div class="owner-photo">
+        <img src="pak.jpeg" class="photo-img" alt="Foto owner">
+        <div class="cap">Foto owner</div>
+      </div>
+      <div>
+        <p class="lede">Bapak Suherman merupakan suami dari Ibu Vera yang memulai usaha ini karena ingin tetangga dan warga sekitar tidak perlu jauh-jauh mencari bahan bangunan. Baginya, toko bukan sekadar tempat jual-beli, tapi tempat orang bisa bertanya dan dibantu memilih bahan yang paling cocok untuk kebutuhan mereka.</p>
+
+        <div class="biodata">
+          <div class="row"><span>Nama</span><span>Suherman Setiya Budi</span></div>
+          <div class="row"><span>Jabatan</span><span>Pemilik / Pendiri</span></div>
+          <div class="row"><span>Mulai usaha</span><span>2012</span></div>
+          <div class="row"><span>Fokus</span><span>Bahan bangunan, cat dan peralatan tukang</span></div>
+          <div class="row"><span>Kontak toko</span><span>+62 813-6916-0304</span></div>
+        </div>
+
+        <div class="quote">&ldquo;Yang penting harga jujur dan barangnya selalu ada saat pelanggan butuh.&rdquo;</div>
+      </div>
+    </div>
+
+    <div class="owner-divider"></div>
+
+    <div class="owner-grid">
+      <div class="owner-photo">
+        <img src="vera.jpeg" class="photo-img" alt="Foto owner">
+        <div class="cap">Foto owner</div>
+      </div>
+      <div>
+        <p class="lede"> Ibu Vera merupakan istri dari Bapak Suherman yang membantu pak Suherman dalam memulai usaha ini karena ingin tetangga dan warga sekitar tidak perlu jauh-jauh mencari bahan bangunan. Baginya, toko bukan sekadar tempat jual-beli, tapi tempat orang bisa bertanya dan dibantu memilih bahan yang paling cocok untuk kebutuhan mereka.</p>
+
+        <div class="biodata">
+          <div class="row"><span>Nama</span><span>Vera</span></div>
+          <div class="row"><span>Jabatan</span><span>Pemilik / Pendiri</span></div>
+          <div class="row"><span>Mulai usaha</span><span>2012</span></div>
+          <div class="row"><span>Fokus</span><span>Bahan bangunan, cat dan peralatan tukang</span></div>
+          <div class="row"><span>Kontak toko</span><span>+62 813-6916-0304</span></div>
+        </div>
+
+        <div class="quote">&ldquo;Yang penting harga jujur dan barangnya selalu ada saat pelanggan butuh.&rdquo;</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 PRODUK ============ -->
+  <section class="panel" id="produk">
+    <div class="eyebrow">Katalog</div>
+    <h2 class="title">Produk yang kami jual</h2>
+    <p class="lede">Cari berdasarkan nama, atau saring per kategori. Tambahkan ke keranjang, lalu buka tab Keranjang untuk hitung total belanja.</p>
+
+    <div class="catalog-controls">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none"><use href="#ic-search"/></svg>
+        <input type="text" id="searchInput" placeholder="Cari produk, contoh: paku, cat, kran...">
+      </div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="product-grid" id="productGrid"></div>
+  </section>
+
+  <!-- ============ 04 KERANJANG ============ -->
+  <section class="panel" id="keranjang">
+    <div class="cart-section" id="cartAnchor">
+      <div class="eyebrow">Checkout</div>
+      <h2 class="title">Keranjang &amp; kalkulator belanja</h2>
+      <p class="lede">Kalkulator ini membantu memperkirakan total belanja sebelum ke kasir. Pilih metode pembayaran yang kamu mau.</p>
+
+      <div class="cart-layout">
+        <div>
+          <div class="cart-list" id="cartList"></div>
+        </div>
+
+        <div>
+          <div class="summary-box">
+
+            <!-- STEP 1: form -->
+            <div id="stepForm">
+              <h3>Ringkasan Belanja</h3>
+              <div class="sum-row"><span>Jumlah item</span><span id="sumCount">0</span></div>
+              <div class="sum-row saving" id="rowSaving" style="display:none"><span>Hemat dari diskon</span><span id="sumSaving">Rp0</span></div>
+              <div class="sum-row total"><span>Total</span><span id="sumTotal">Rp0</span></div>
+
+              <div class="field-group">
+                <label for="buyerName">Nama Pembeli</label>
+                <input type="text" id="buyerName" placeholder="Contoh: Budi Santoso">
+              </div>
+              <div class="field-group">
+                <label for="buyerPhone">Nomor Telepon / WhatsApp</label>
+                <input type="tel" id="buyerPhone" inputmode="numeric" placeholder="Contoh: 081234567890">
+              </div>
+
+              <div class="field-group" style="margin-bottom:6px">
+                <label>Pengambilan Barang</label>
+              </div>
+              <div class="fulfil-methods" id="fulfilMethods">
+                <div class="fulfil-opt" data-f="antar">
+                  <input type="radio" name="fulfil" id="fulfilAntar" value="antar" checked>
+                  <label for="fulfilAntar">Diantar</label>
+                </div>
+                <div class="fulfil-opt" data-f="ambil">
+                  <input type="radio" name="fulfil" id="fulfilAmbil" value="ambil">
+                  <label for="fulfilAmbil">Ambil Sendiri</label>
+                </div>
+              </div>
+
+              <div class="pay-methods" id="payMethods">
+                <div class="pay-opt" data-m="dana">
+                  <input type="radio" name="pay" id="payDana" value="dana" checked>
+                  <label for="payDana">DANA</label>
+                </div>
+                <div class="pay-opt" data-m="qris">
+                  <input type="radio" name="pay" id="payQris" value="qris">
+                  <label for="payQris">QRIS</label>
+                </div>
+              </div>
+
+              <button class="checkout-btn" id="checkoutBtn" disabled>Lanjut ke Pembayaran</button>
+              <div class="cart-note">*Simulasi kalkulator belanja, bukan transaksi sungguhan.</div>
+            </div>
+
+            <!-- STEP 2: menunggu pembayaran -->
+            <div id="stepWaiting" style="display:none">
+              <h3>Menunggu Pembayaran</h3>
+              <div class="sum-row total"><span>Total Bayar</span><span id="waitingTotal">Rp0</span></div>
+
+              <div class="pay-detail show" id="detailDana">Transfer ke DANA <b>0813-6916-0304 a.n. Suherman Setiya Budi</b>, lalu tunjukkan / kirim bukti transfer ke kasir.</div>
+              <div class="pay-detail show" id="detailQris">
+                <div class="qr-box">
+                  <img src="QRIS.jpeg" alt="QRIS Toko Bangunan Vera"
+                       onerror="this.parentElement.classList.add('qr-missing'); this.remove();">
+                </div>
+                <div style="text-align:center">Pindai QRIS di atas dengan aplikasi e-wallet atau mobile banking kamu, lalu kirim bukti pembayaran ke kasir.</div>
+              </div>
+
+              <p class="waiting-question">Sudah kirim bukti transfer?</p>
+              <div class="waiting-actions">
+                <button class="checkout-btn" id="btnSudah">Sudah, saya kirim</button>
+                <button class="btn-secondary" id="btnBelum">Belum</button>
+              </div>
+            </div>
+
+            <!-- STEP 3a: berhasil -->
+            <div id="resultSuccess" style="display:none">
+              <div class="result-title success">YOSHH PESANAN BERHASIL!</div>
+              <div class="rid" id="receiptId"></div>
+              <div id="receiptItems"></div>
+              <div class="r-row r-total"><span>Total</span><span id="receiptTotal"></span></div>
+              <div class="r-info" id="receiptInfo"></div>
+              <div class="r-badge" id="receiptPay">&#10003; Metode pembayaran</div>
+              <button class="checkout-btn" id="btnNewOrder" style="margin-top:16px">Belanja Lagi</button>
+            </div>
+
+            <!-- STEP 3b: belum berhasil -->
+            <div id="resultFail" style="display:none">
+              <div class="result-title fail">PESANAN BELUM BERHASIL</div>
+              <p style="color:var(--ink-soft);font-size:.87rem">Pesanan baru diproses setelah bukti transfer kami terima. Selesaikan pembayaran dulu, lalu konfirmasi lagi ya.</p>
+              <button class="checkout-btn" id="btnBackToWaiting">Kembali &amp; Konfirmasi Lagi</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 RATING ============ -->
+  <section class="panel" id="rating">
+    <div class="eyebrow">Ulasan Pelanggan</div>
+    <h2 class="title">Apa kata pelanggan kami</h2>
+
+    <div class="rating-summary">
+      <div>
+        <div class="avg-num" id="avgNum">-</div>
+        <div class="avg-stars" id="avgStars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="avg-sub" id="avgSub">dari - ulasan</div>
+      </div>
+      <div class="bars" id="bars"></div>
+    </div>
+
+    <div class="review-form">
+      <h3>Tulis ulasan kamu</h3>
+      <div class="star-pick" id="starPick">
+        <button type="button" data-v="1">&#9733;</button>
+        <button type="button" data-v="2">&#9733;</button>
+        <button type="button" data-v="3">&#9733;</button>
+        <button type="button" data-v="4">&#9733;</button>
+        <button type="button" data-v="5">&#9733;</button>
+      </div>
+      <input type="text" id="reviewName" placeholder="Nama kamu">
+      <textarea id="reviewText" placeholder="Ceritakan pengalaman belanja kamu..."></textarea>
+      <button class="submit" id="submitReview">Kirim Ulasan</button>
+    </div>
+
+    <div class="review-list" id="reviewList"></div>
+  </section>
+
+  <!-- ============ 06 DOKUMENTASI AKHIR ============ -->
+  <section class="panel" id="dokumentasi">
+    <div class="eyebrow">Dokumentasi</div>
+    <h2 class="title">Dokumentasi Akhir Kegiatan</h2>
+    <p class="lede">Kumpulan foto dokumentasi akhir bersama owner, bukti tanda tangan, dan anggota tim yang terlibat.</p>
+
+    <h3 class="doc-section-title">Bersama Owner</h3>
+    <div class="doc-grid">
+      <div class="photo doc-card">
+        <img src="a1.jpeg" class="photo-img" alt="Dokumentasi akhir bersama owner 1">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg></div>
+        <div class="cap"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg> </div>
+      </div>
+      <div class="photo doc-card">
+        <img src="a2.jpeg" class="photo-img" alt="Dokumentasi akhir bersama owner 2">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg></div>
+        <div class="cap"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-camera"/></svg> </div>
+      </div>
+    </div>
+
+    <h3 class="doc-section-title">Bukti Tanda Tangan Owner</h3>
+    <div class="doc-grid">
+      <div class="photo doc-card">
+        <img src="tanda.jpeg" class="photo-img" alt="Kertas tanda tangan owner">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-doc"/></svg></div>
+        <div class="cap"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-doc"/></svg> Kertas tanda tangan owner</div>
+      </div>
+    </div>
+
+    <h3 class="doc-section-title">Anggota Tim 4</h3>
+    <div class="doc-sub">Berikut adalah foto dari anggota tim 4.</div>
+    <div class="doc-grid">
+      <div class="photo doc-card">
+        <img src="1.jpeg" class="photo-img" alt="Anggota tim 1">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-user"/></svg></div>
+        <div class="cap"><input class="doc-name-input" type="text" placeholder="Maya Airini"></div>
+      </div>
+      <div class="photo doc-card">
+        <img src="2.jpeg" class="photo-img" alt="Anggota tim 2">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-user"/></svg></div>
+        <div class="cap"><input class="doc-name-input" type="text" placeholder="Melda Risqa Ramadhani"></div>
+      </div>
+      <div class="photo doc-card">
+        <img src="3.jpeg" class="photo-img" alt="Anggota tim 3">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-user"/></svg></div>
+        <div class="cap"><input class="doc-name-input" type="text" placeholder="M Harri Syahputra"></div>
+      </div>
+      <div class="photo doc-card">
+        <img src="4.jpeg" class="photo-img" alt="Anggota tim 4">
+        <div class="placeholder-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#ic-user"/></svg></div>
+        <div class="cap"><input class="doc-name-input" type="text" placeholder="Salsa Dwi Citra Lestari"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<button class="float-cart" id="floatCart">
+  <svg viewBox="0 0 24 24" fill="none"><use href="#ic-cart"/></svg>
+  <span>Keranjang</span>
+  <span class="count" id="floatCount">0</span>
+</button>
+
+<footer class="site">
+  <div class="foot-grid">
+    <div>
+      <div class="b">Toko Bangunan Vera</div>
+      <div class="s">Jl. Lintas Sumatra (Jalan Trans Sumatra), Kalianda, Lampung Selatan</div>
+    </div>
+    <div>
+      <div class="b">Jam Buka</div>
+      <div class="s">Senin&ndash;Minggu, 09.00&ndash;16.00 WIB</div>
+    </div>
+    <div>
+      <div class="b">Kontak</div>
+      <div class="s">WhatsApp / Telp: +62 813-6916-0304</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Pratinjau gambar: klik foto untuk melihat penuh -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pratinjau gambar">
+  <button class="lb-close" id="lbClose" aria-label="Tutup">&times;</button>
+  <img id="lbImg" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var PRODUCTS = [
+    {id:1,  name:"Keramik kasar 40x40", cat:"Keramik & Lantai", price:75000, unit:"", img:"keramik 40.jpeg"},
+    {id:2,  name:"Bata merah", cat:"Bahan Bangunan", price:520, unit:"pcs", img:"bata merah.jpeg"},
+    {id:3,  name:"Hebel", cat:"Bahan Bangunan", price:790000, unit:"m\u00b3", img:"hebel.jpeg"},
+    {id:4,  name:"Cat propan 1 pail 25 kg", cat:"Cat & Pelapis", price:850000, unit:"", img:"oje.jpeg"},
+    {id:5,  name:"Paku seri 2\" s/d 6\"", cat:"Paku & Kawat", price:20000, unit:"kg", img:"paku.jpeg"},
+    {id:6,  name:"Linggis kecil", cat:"Alat Tangan", price:25000, unit:"", img:"kecil.jpeg"},
+    {id:7,  name:"Cutter Joyko", cat:"Alat Tangan", price:28000, unit:"", img:"joyko.jpeg"},
+    {id:8,  name:"Dop Grest 3\"", cat:"Pipa & Sanitasi", price:18000, unit:"", img:"l.jpeg"},
+    {id:9,  name:"Tee Grest 3\"", cat:"Pipa & Sanitasi", price:25000, unit:"", img:"t.jpeg"},
+    {id:10, name:"Cat Pylox", cat:"Cat & Pelapis", price:35000, unit:"", img:"pilok.jpeg"},
+    {id:11, name:"Tambang", cat:"Alat & Tali", price:70000, unit:"kg", img:"tambang.jpeg"},
+    {id:12, name:"Doble kran shower BELLUCCI", cat:"Pipa & Sanitasi", price:155000, unit:"", img:"double keran.jpeg"},
+    {id:13, name:"Bidet jet shower BELLUCCI", cat:"Pipa & Sanitasi", price:135000, unit:"", img:"bidet.jpeg"},
+    {id:14, name:"Sendok semen IGM 6\"", cat:"Alat Tangan", price:33000, unit:"", img:"sendok semen.jpeg"},
+    {id:15, name:"Gunting canal HASTON", cat:"Alat Tangan", price:198000, unit:"", img:"gunting.jpeg"},
+    {id:16, name:"Gembok jaket KODAI 50 mm", cat:"Kunci & Pengaman", price:40000, unit:"", img:"gembok.jpeg"},
+    {id:17, name:"Tang lancip TEKIRO", cat:"Alat Tangan", price:68000, unit:"", img:"tang lancip.jpeg"},
+    {id:18, name:"Meteran DELI 3 mtr", cat:"Alat Tangan", price:35000, unit:"", img:"meteran deli.jpeg"},
+    {id:19, name:"Engsel PVC", cat:"Perlengkapan Pintu", price:10000, unit:"", img:"engsel pvc.jpeg"},
+    {id:20, name:"Kacamata las HASTON", cat:"Keselamatan & Las", price:25000, unit:"", img:"kaca mata las.jpeg"},
+    {id:21, name:"Kuas 4\" HOME CARE", cat:"Cat & Pelapis", price:28000, unit:"", img:"kuas4.jpeg"},
+    {id:22, name:"Pahat kayu HASTON \u00bd\"", cat:"Alat Tangan", price:33000, unit:"", img:"pahat kayu.jpeg"},
+    {id:23, name:"Amplas roll", cat:"Cat & Pelapis", price:14000, unit:"mtr", img:"imel.jpeg"},
+    {id:24, name:"Benang bangunan", cat:"Alat Tangan", price:6000, unit:"", img:"benang bangunan.jpeg"},
+    {id:25, name:"Terminal LB 4 UTICON", cat:"Listrik", price:35000, unit:"", img:"terminal.jpeg"},
+    {id:26, name:"Kabel KOKATA NYM 2x1,5 (50 yard)", cat:"Listrik", price:465000, unit:"", img:"kabel kokata.jpeg"},
+    {id:27, name:"Paint remover 1 ltr", cat:"Cat & Pelapis", price:98000, unit:"", img:"pain remover.jpeg"},
+    {id:28, name:"Fitting flapon VISICOM", cat:"Listrik", price:12000, unit:"", img:"fitting flappon.jpeg"},
+    {id:29, name:"Tembakan lem bakar", cat:"Alat Tangan", price:45000, unit:"", img:"tembakan lem bakar.jpeg"},
+    {id:30, name:"Kape plastik 5\"", cat:"Cat & Pelapis", price:5000, unit:"", img:"kape plastik.jpeg"},
+    {id:31, name:"Roskam sisir", cat:"Alat Tangan", price:55000, unit:"", img:"roskam sisir.jpeg"},
+    {id:32, name:"Saklar seri OB", cat:"Listrik", price:18000, unit:"", img:"saklar seri ob.jpeg"},
+    {id:33, name:"Mata bor beton 12 mm HASTON", cat:"Alat Tangan", price:75000, unit:"", img:"mata bor beton 12.jpeg"},
+    {id:34, name:"Kunci inggris 8\"", cat:"Alat Tangan", price:55000, unit:"", img:"kunci inggris 8.jpeg"},
+    {id:35, name:"Stang las", cat:"Keselamatan & Las", price:75000, unit:"", img:"stang las.jpeg"},
+    {id:36, name:"Sabit", cat:"Alat Tangan", price:55000, unit:"", img:"sabit.jpeg"},
+    {id:37, name:"Fisher S8 ORIS", cat:"Paku & Kawat", price:28000, unit:"", img:"fisher s8.jpeg"},
+    {id:38, name:"Fisher S6 ORIS", cat:"Paku & Kawat", price:18000, unit:"", img:"fisher s6.jpeg"},
+    {id:39, name:"Cat besi CENDAI", cat:"Cat & Pelapis", price:68000, unit:"", img:"cat besi.jpeg"},
+    {id:40, name:"Kassa flapon", cat:"Listrik", price:12000, unit:"", img:"kassa flapon.jpeg"},
+    {id:41, name:"Lem Ehabon 30 ml", cat:"Lem & Perekat", price:38000, unit:"", img:"lem ehabon.jpeg"},
+    {id:42, name:"Lampu MicroLED 15 W", cat:"Listrik", price:33000, unit:"", img:"lampu.jpeg"},
+    {id:43, name:"Lem sealant DEXBOND", cat:"Lem & Perekat", price:35000, unit:"", img:"lem sealan.jpeg"},
+    {id:44, name:"Selang bidet", cat:"Pipa & Sanitasi", price:58000, unit:"", img:"selang.jpeg"},
+    {id:45, name:"Kran BCP flexible BELLUCCI", cat:"Pipa & Sanitasi", price:238000, unit:"", img:"kran bcp.jpeg"},
+    {id:46, name:"Kunci T TEKIRO 14 mm", cat:"Alat Tangan", price:45000, unit:"", img:"kunci t.jpeg"},
+    {id:47, name:"Palu FUKUNG gagang kayu", cat:"Alat Tangan", price:33000, unit:"", img:"palu kayu.jpeg"},
+    {id:48, name:"Palu gagang fiber", cat:"Alat Tangan", price:40000, unit:"", img:"palu fiber.jpeg"},
+    {id:49, name:"Seal tape", cat:"Pipa & Sanitasi", price:6000, unit:"", img:"seal teap.jpeg"},
+    {id:50, name:"Semen Rajawali 50 kg", cat:"Bahan Bangunan", price:68000, unit:"", img:"semen.jpeg"},
+    {id:51, name:"Genteng tanah liat", cat:"Bahan Bangunan", price:5000, unit:"pcs", img:"genteng.jpeg"},
+    {id:52, name:"Kloset jongkok TOTO", cat:"Pipa & Sanitasi", price:460000, unit:"", img:"kloset.jpeg"}
+  ];
+
+  // ====== DISKON TETAP (per unit, tidak bergantung jumlah beli) ======
+  // Format: id produk : persen diskon. Tambah / ubah / hapus baris sesuka kamu.
+  // Contoh: 50:5 artinya produk id 50 (Semen Rajawali) diskon 5%.
+  var DISCOUNTS = {
+    4: 10,   // Cat propan 1 pail 25 kg
+    12: 15,  // Doble kran shower BELLUCCI
+    26: 8,   // Kabel KOKATA NYM 2x1,5
+    48: 20,  // Palu gagang fiber
+    50: 5    // Semen Rajawali 50 kg
+  };
+  function discOf(p){ return DISCOUNTS[p.id] || 0; }
+
+  // ====== DISKON GROSIR (berdasarkan jumlah beli, khusus per 1 produk) ======
+  // Diskon ini HANYA berlaku untuk produk yang bersangkutan, dihitung dari jumlah
+  // beli produk itu sendiri di keranjang (bukan gabungan semua produk).
+  // Format: id produk : { minQty: jumlah minimal, percent: persen diskon }
+  var BULK_DISCOUNTS = {
+    2:  { minQty: 8000, percent: 10 }, // Bata merah: beli 8.000 pcs+ -> diskon 10%
+    3:  { minQty: 50,   percent: 8  }, // Hebel: beli 50 m3+ -> diskon 8%
+    5:  { minQty: 20,   percent: 12 }  // Paku seri 2"-6": beli 20 kg+ -> diskon 12%
+  };
+  function bulkInfoOf(p){ return BULK_DISCOUNTS[p.id] || null; }
+  function fmtQty(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+
+  // Persen diskon efektif untuk qty tertentu (grosir dipakai kalau qty sudah cukup,
+  // kalau belum pakai diskon tetap biasa).
+  function effectivePercent(p, qty){
+    var bulk = bulkInfoOf(p);
+    if (bulk && qty >= bulk.minQty) return bulk.percent;
+    return discOf(p);
+  }
+  function unitPriceAt(p, qty){
+    return Math.round(p.price * (1 - effectivePercent(p, qty) / 100));
+  }
+  // Harga default dipakai di badge katalog saat qty belum dipilih (qty=1) supaya
+  // konsisten dengan tampilan sebelumnya.
+  function finalPrice(p){ return unitPriceAt(p, 1); }
+
+  var ICON_BY_CAT = {
+    "Bahan Bangunan": "ic-brick",
+    "Keramik & Lantai": "ic-brick",
+    "Cat & Pelapis": "ic-bucket",
+    "Lem & Perekat": "ic-bucket",
+    "Paku & Kawat": "ic-nail",
+    "Alat Tangan": "ic-wrench",
+    "Kunci & Pengaman": "ic-wrench",
+    "Perlengkapan Pintu": "ic-wrench",
+    "Listrik": "ic-bolt",
+    "Pipa & Sanitasi": "ic-drop",
+    "Keselamatan & Las": "ic-shield",
+    "Alat & Tali": "ic-nail"
+  };
+
+  var DEFAULT_REVIEWS = [
+    {name:"Qonita Bogore", stars:5, text:"Bahannya lengkap, harga bersaing dibanding toko lain di sekitar sini.", tag:"Pelanggan"},
+    {name:"Kageyama ", stars:4, text:"Pelayanan ramah dan sabar jelasin, cuma kadang antre pas akhir pekan.", tag:"Pelanggan"},
+    {name:"Meimei nara", stars:5, text:"Langganan dari 2018 buat proyek renovasi, stok hampir selalu ada.", tag:"Kontraktor"}
+  ];
+
+  function fmtRupiah(n){
+    return "Rp" + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function safeGet(key, fallback){
+    try {
+      var raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch(e){ return fallback; }
+  }
+  function safeSet(key, val){
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch(e){}
+  }
+
+  var cart = safeGet("vera_cart_v1", {});
+  var reviews = safeGet("vera_reviews_v1", DEFAULT_REVIEWS);
+  var activeCat = "Semua";
+  var searchTerm = "";
+  var pickedStars = 0;
+
+  // ---------- Nav ----------
+  var tabButtons = document.querySelectorAll("#tabs button");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabButtons.forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelectorAll("section.panel").forEach(function(p){ p.classList.remove("active"); });
+      document.getElementById(btn.dataset.target).classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+  });
+  function goTab(target){
+    var btn = document.querySelector('#tabs button[data-target="'+target+'"]');
+    if (btn) btn.click();
+  }
+
+  // ---------- Katalog ----------
+  var cats = ["Semua"].concat(Array.from(new Set(PRODUCTS.map(function(p){return p.cat;}))));
+  var chipsWrap = document.getElementById("chips");
+  cats.forEach(function(c){
+    var chip = document.createElement("button");
+    chip.className = "chip" + (c === "Semua" ? " active" : "");
+    chip.textContent = c;
+    chip.addEventListener("click", function(){
+      activeCat = c;
+      chipsWrap.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("active"); });
+      chip.classList.add("active");
+      renderProducts();
+    });
+    chipsWrap.appendChild(chip);
+  });
+
+  document.getElementById("searchInput").addEventListener("input", function(e){
+    searchTerm = e.target.value.trim().toLowerCase();
+    renderProducts();
+  });
+
+  function qtyOf(id){ return cart[id] ? cart[id].qty : 0; }
+
+  // Blok harga (dipakai saat render awal & saat qty berubah)
+  function priceBlockHtml(p, qty){
+    var pct = effectivePercent(p, qty);
+    var final = unitPriceAt(p, qty);
+    var html = pct ? ('<span class="old-price">'+fmtRupiah(p.price)+'</span>'+fmtRupiah(final)) : fmtRupiah(p.price);
+    return html + (p.unit ? ' <small>/ '+p.unit+'</small>' : '');
+  }
+
+  // Badge diskon pojok kiri atas foto produk
+  function badgeHtml(p, qty){
+    var pct = effectivePercent(p, qty);
+    return pct ? '<div class="disc-badge">-'+pct+'%</div>' : '';
+  }
+
+  // Info diskon grosir: sudah dapat, atau kurang berapa lagi
+  function bulkHintHtml(p, qty){
+    var bulk = bulkInfoOf(p);
+    if (!bulk) return "";
+    var unitLabel = p.unit || "pcs";
+    if (qty >= bulk.minQty){
+      return '<div class="bulk-hint active">&#10003; Diskon grosir '+bulk.percent+'% aktif (beli '+fmtQty(bulk.minQty)+'+ '+unitLabel+')</div>';
+    }
+    var kurang = bulk.minQty - qty;
+    return '<div class="bulk-hint">Beli minimal '+fmtQty(bulk.minQty)+' '+unitLabel+' untuk diskon grosir '+bulk.percent+'% (kurang '+fmtQty(kurang)+' '+unitLabel+' lagi)</div>';
+  }
+
+  function renderProducts(){
+    var grid = document.getElementById("productGrid");
+    var list = PRODUCTS.filter(function(p){
+      var matchCat = activeCat === "Semua" || p.cat === activeCat;
+      var matchSearch = !searchTerm || p.name.toLowerCase().indexOf(searchTerm) !== -1;
+      return matchCat && matchSearch;
+    });
+    grid.innerHTML = "";
+    if (!list.length){
+      grid.innerHTML = '<div class="no-results">Produk tidak ditemukan. Coba kata kunci lain.</div>';
+      return;
+    }
+    list.forEach(function(p){
+      var icon = ICON_BY_CAT[p.cat] || "ic-brick";
+      var q = qtyOf(p.id);
+      var startQty = q > 0 ? q : 1;
+      var card = document.createElement("div");
+      card.className = "p-card";
+      var photoInner = (p.img && p.img.trim() !== "")
+        ? '<img src="'+p.img+'" alt="'+p.name+'">'
+        : '<svg viewBox="0 0 24 24" fill="none"><use href="#'+icon+'"/></svg>';
+      card.innerHTML =
+        '<div class="p-photo" id="badgewrap-'+p.id+'">'+badgeHtml(p, startQty)+photoInner+'</div>' +
+        '<div class="p-body">' +
+        '<div class="p-cat">'+p.cat+'</div>' +
+        '<div class="p-name">'+p.name+'</div>' +
+        '<div class="p-price" id="price-'+p.id+'">'+priceBlockHtml(p, startQty)+'</div>' +
+        '<div id="bulkhint-'+p.id+'">'+bulkHintHtml(p, startQty)+'</div>' +
+        '<div class="p-actions">' +
+          '<div class="stepper">' +
+            '<button type="button" data-act="dec" data-id="'+p.id+'">&minus;</button>' +
+            '<input type="number" inputmode="numeric" min="0" step="1" class="qty-input" id="qty-'+p.id+'" value="'+q+'" aria-label="Jumlah '+p.name.replace(/"/g,'&quot;')+'">' +
+            '<button type="button" data-act="inc" data-id="'+p.id+'">+</button>' +
+          '</div>' +
+          '<button type="button" class="add-btn" data-add="'+p.id+'">Tambah</button>' +
+        '</div>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+
+    function updateCardUI(id){
+      var p = PRODUCTS.find(function(pp){ return pp.id === id; });
+      if (!p) return;
+      var input = document.getElementById("qty-"+id);
+      var qty = parseInt(input.value, 10) || 0;
+      var forCalc = qty > 0 ? qty : 1;
+      var priceEl = document.getElementById("price-"+id);
+      if (priceEl) priceEl.innerHTML = priceBlockHtml(p, forCalc);
+      var hintEl = document.getElementById("bulkhint-"+id);
+      if (hintEl) hintEl.innerHTML = bulkHintHtml(p, forCalc);
+      var badgeWrap = document.getElementById("badgewrap-"+id);
+      if (badgeWrap){
+        var existing = badgeWrap.querySelector(".disc-badge");
+        if (existing) existing.remove();
+        var newBadge = badgeHtml(p, forCalc);
+        if (newBadge) badgeWrap.insertAdjacentHTML("afterbegin", newBadge);
+      }
+    }
+
+    grid.querySelectorAll('[data-act]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = parseInt(btn.dataset.id, 10);
+        var input = document.getElementById("qty-"+id);
+        var v = parseInt(input.value, 10) || 0;
+        if (btn.dataset.act === "inc") v++;
+        else v = Math.max(0, v - 1);
+        input.value = v;
+        updateCardUI(id);
+      });
+    });
+    grid.querySelectorAll('.qty-input').forEach(function(input){
+      input.addEventListener("input", function(){
+        input.value = input.value.replace(/[^0-9]/g, "");
+        var id = parseInt(input.id.replace("qty-",""), 10);
+        updateCardUI(id);
+      });
+      input.addEventListener("focus", function(){ input.select(); });
+      input.addEventListener("keydown", function(e){
+        if (e.key === "Enter"){
+          var addBtn = input.closest(".p-actions").querySelector("[data-add]");
+          if (addBtn) addBtn.click();
+        }
+      });
+    });
+    grid.querySelectorAll('[data-add]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var id = parseInt(btn.dataset.add, 10);
+        var input = document.getElementById("qty-"+id);
+        var v = parseInt(input.value, 10);
+        if (!v || v <= 0) v = 1;
+        input.value = v;
+        var product = PRODUCTS.find(function(p){ return p.id === id; });
+        cart[id] = {qty: v, name: product.name, price: unitPriceAt(product, v), orig: product.price, unit: product.unit, cat: product.cat};
+        safeSet("vera_cart_v1", cart);
+        renderCart();
+        renderFloatCart();
+        updateCardUI(id);
+        btn.textContent = "Ditambahkan";
+        setTimeout(function(){ btn.textContent = "Tambah"; }, 900);
+      });
+    });
+  }
+
+  // ---------- Keranjang ----------
+  function cartCount(){
+    return Object.keys(cart).reduce(function(sum, id){ return sum + cart[id].qty; }, 0);
+  }
+  function cartTotal(){
+    return Object.keys(cart).reduce(function(sum, id){ return sum + cart[id].qty * cart[id].price; }, 0);
+  }
+
+  function cartSaving(){
+    return Object.keys(cart).reduce(function(sum, id){
+      var it = cart[id];
+      return sum + (it.orig && it.orig > it.price ? it.qty * (it.orig - it.price) : 0);
+    }, 0);
+  }
+
+  function renderFloatCart(){
+    var c = cartCount();
+    document.getElementById("floatCount").textContent = c;
+    document.getElementById("floatCart").classList.toggle("hide", c === 0);
+  }
+
+  function showStep(step){
+    document.getElementById("stepForm").style.display = step === "form" ? "block" : "none";
+    document.getElementById("stepWaiting").style.display = step === "waiting" ? "block" : "none";
+    document.getElementById("resultSuccess").style.display = step === "success" ? "block" : "none";
+    document.getElementById("resultFail").style.display = step === "fail" ? "block" : "none";
+  }
+
+  function renderCart(){
+    var wrap = document.getElementById("cartList");
+    var ids = Object.keys(cart);
+    showStep("form");
+
+    if (!ids.length){
+      wrap.innerHTML = '<div class="cart-empty">Keranjang masih kosong nih. Yuk pilih produk di tab Produk.</div>';
+    } else {
+      wrap.innerHTML = "";
+      ids.forEach(function(id){
+        var item = cart[id];
+        var icon = ICON_BY_CAT[item.cat] || "ic-brick";
+        var row = document.createElement("div");
+        row.className = "cart-item";
+        row.innerHTML =
+          '<div class="ci-icon"><svg viewBox="0 0 24 24" fill="none"><use href="#'+icon+'"/></svg></div>' +
+          '<div><div class="ci-name">'+item.name+'</div><div class="ci-unit">'+item.qty+(item.unit? ' '+item.unit : ' pcs')+' &times; '+fmtRupiah(item.price)+(item.orig && item.orig > item.price ? ' <s>'+fmtRupiah(item.orig)+'</s>' : '')+'</div></div>' +
+          '<div class="ci-sub">'+fmtRupiah(item.qty * item.price)+'</div>' +
+          '<button class="ci-remove" data-remove="'+id+'" aria-label="Hapus">&times;</button>';
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll('[data-remove]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          delete cart[btn.dataset.remove];
+          safeSet("vera_cart_v1", cart);
+          renderCart();
+          renderFloatCart();
+          renderProducts();
+        });
+      });
+    }
+
+    document.getElementById("sumCount").textContent = cartCount();
+    document.getElementById("sumTotal").textContent = fmtRupiah(cartTotal());
+    var saving = cartSaving();
+    document.getElementById("rowSaving").style.display = saving > 0 ? "flex" : "none";
+    document.getElementById("sumSaving").textContent = "-" + fmtRupiah(saving);
+    document.getElementById("checkoutBtn").disabled = ids.length === 0;
+  }
+
+  document.getElementById("floatCart").addEventListener("click", function(){
+    goTab("keranjang");
+  });
+
+  // ---------- Pembayaran ----------
+  document.querySelectorAll('input[name="pay"]').forEach(function(r){
+    r.addEventListener("change", function(){
+      var checked = document.querySelector('input[name="pay"]:checked').value;
+      document.querySelectorAll(".pay-opt").forEach(function(el){
+        el.classList.toggle("checked", el.dataset.m === checked);
+      });
+    });
+  });
+
+  document.querySelectorAll('input[name="fulfil"]').forEach(function(r){
+    r.addEventListener("change", function(){
+      var checked = document.querySelector('input[name="fulfil"]:checked').value;
+      document.querySelectorAll(".fulfil-opt").forEach(function(el){
+        el.classList.toggle("checked", el.dataset.f === checked);
+      });
+    });
+  });
+
+  var currentOrder = null;
+
+  document.getElementById("checkoutBtn").addEventListener("click", function(){
+    var ids = Object.keys(cart);
+    if (!ids.length) return;
+
+    var nameInput = document.getElementById("buyerName");
+    var phoneInput = document.getElementById("buyerPhone");
+    var name = nameInput.value.trim();
+    var phone = phoneInput.value.trim();
+
+    nameInput.classList.remove("field-error");
+    phoneInput.classList.remove("field-error");
+
+    var hasError = false;
+    if (!name){ nameInput.classList.add("field-error"); hasError = true; }
+    if (!phone){ phoneInput.classList.add("field-error"); hasError = true; }
+    if (hasError){
+      alert("Isi nama dan nomor telepon dulu, ya.");
+      return;
+    }
+
+    var method = document.querySelector('input[name="pay"]:checked').value;
+    var fulfil = document.querySelector('input[name="fulfil"]:checked').value;
+    currentOrder = {
+      method: method,
+      methodLabel: {dana:"DANA", qris:"QRIS"}[method],
+      fulfil: fulfil,
+      fulfilLabel: {antar:"Diantar", ambil:"Ambil Sendiri"}[fulfil],
+      buyerName: name,
+      buyerPhone: phone,
+      total: cartTotal(),
+      items: ids.map(function(id){ return cart[id]; })
+    };
+    document.getElementById("detailDana").classList.toggle("show", method === "dana");
+    document.getElementById("detailQris").classList.toggle("show", method === "qris");
+    document.getElementById("waitingTotal").textContent = fmtRupiah(currentOrder.total);
+    showStep("waiting");
+  });
+
+  document.getElementById("btnSudah").addEventListener("click", function(){
+    if (!currentOrder) return;
+    var orderId = "VERA-" + Date.now().toString().slice(-6);
+    var now = new Date();
+    document.getElementById("receiptId").textContent = "No. Pesanan " + orderId + " \u2022 " + now.toLocaleString("id-ID");
+    var itemsHtml = currentOrder.items.map(function(item){
+      return '<div class="r-row"><span>'+item.name+' &times;'+item.qty+'</span><span>'+fmtRupiah(item.qty*item.price)+'</span></div>';
+    }).join("");
+    document.getElementById("receiptItems").innerHTML = itemsHtml;
+    document.getElementById("receiptTotal").textContent = fmtRupiah(currentOrder.total);
+    document.getElementById("receiptInfo").innerHTML =
+      '<div class="r-row"><span>Nama Pembeli:</span><span>'+escapeHtml(currentOrder.buyerName)+'</span></div>' +
+      '<div class="r-row"><span>No. Telepon:</span><span>'+escapeHtml(currentOrder.buyerPhone)+'</span></div>' +
+      '<div class="r-row"><span>Pengambilan:</span><span>'+currentOrder.fulfilLabel+'</span></div>';
+    document.getElementById("receiptPay").innerHTML = "&#10003; Bayar via " + currentOrder.methodLabel;
+    showStep("success");
+  });
+
+  document.getElementById("btnBelum").addEventListener("click", function(){
+    showStep("fail");
+  });
+
+  document.getElementById("btnBackToWaiting").addEventListener("click", function(){
+    showStep("waiting");
+  });
+
+  document.getElementById("btnNewOrder").addEventListener("click", function(){
+    cart = {};
+    safeSet("vera_cart_v1", cart);
+    currentOrder = null;
+    document.getElementById("buyerName").value = "";
+    document.getElementById("buyerPhone").value = "";
+    renderCart();
+    renderFloatCart();
+    renderProducts();
+  });
+
+  // ---------- Rating ----------
+  function renderRating(){
+    var n = reviews.length;
+    var avg = n ? reviews.reduce(function(s,r){ return s + r.stars; }, 0) / n : 0;
+    document.getElementById("avgNum").textContent = n ? avg.toFixed(1) : "-";
+    document.getElementById("avgSub").textContent = n ? ("dari " + n + " ulasan") : "belum ada ulasan";
+    document.getElementById("avgStars").innerHTML = starString(Math.round(avg));
+
+    var bars = document.getElementById("bars");
+    bars.innerHTML = "";
+    for (var s = 5; s >= 1; s--){
+      var count = reviews.filter(function(r){ return r.stars === s; }).length;
+      var pct = n ? Math.round((count / n) * 100) : 0;
+      var row = document.createElement("div");
+      row.className = "bar-row";
+      row.innerHTML = '<span>'+s+' &#9733;</span><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><span>'+count+'</span>';
+      bars.appendChild(row);
+    }
+
+    var list = document.getElementById("reviewList");
+    list.innerHTML = "";
+    reviews.slice().reverse().forEach(function(r){
+      var el = document.createElement("div");
+      el.className = "review";
+      el.innerHTML =
+        '<div class="r-head"><span class="r-name">'+escapeHtml(r.name)+'</span><span class="r-stars">'+starString(r.stars)+'</span></div>' +
+        '<div class="r-text">'+escapeHtml(r.text)+'</div>' +
+        (r.tag ? '<div class="r-tag">'+escapeHtml(r.tag)+'</div>' : '');
+      list.appendChild(el);
+    });
+  }
+  function starString(n){
+    var out = "";
+    for (var i=1;i<=5;i++) out += (i<=n ? "&#9733;" : "&#9734;");
+    return out;
+  }
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  var starPick = document.getElementById("starPick");
+  starPick.querySelectorAll("button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      pickedStars = parseInt(btn.dataset.v, 10);
+      starPick.querySelectorAll("button").forEach(function(b){
+        b.classList.toggle("on", parseInt(b.dataset.v,10) <= pickedStars);
+      });
+    });
+  });
+
+  document.getElementById("submitReview").addEventListener("click", function(){
+    var name = document.getElementById("reviewName").value.trim();
+    var text = document.getElementById("reviewText").value.trim();
+    if (!pickedStars){ alert("Yuk pilih bintang dulu."); return; }
+    if (!name){ alert("Isi nama kamu dulu, ya."); return; }
+    if (!text){ alert("Tulis sedikit pengalaman kamu."); return; }
+    reviews.push({name: name, stars: pickedStars, text: text, tag: "Pelanggan"});
+    safeSet("vera_reviews_v1", reviews);
+    document.getElementById("reviewName").value = "";
+    document.getElementById("reviewText").value = "";
+    pickedStars = 0;
+    starPick.querySelectorAll("button").forEach(function(b){ b.classList.remove("on"); });
+    renderRating();
+  });
+
+  // ---------- Pratinjau gambar ----------
+  var lb = document.getElementById("lightbox");
+  var lbImg = document.getElementById("lbImg");
+  var lbCap = document.getElementById("lbCap");
+  function closeLightbox(){
+    lb.classList.remove("show");
+    lbImg.src = "";
+    document.body.style.overflow = "";
+  }
+  document.addEventListener("click", function(e){
+    if (e.target.closest(".doc-name-input")) return;
+    if (lb.classList.contains("show")){
+      if (e.target !== lbImg) closeLightbox();
+      return;
+    }
+    var box = e.target.closest(".photo, .owner-photo, .p-photo, .qr-box");
+    var img = box && box.querySelector("img");
+    if (!img) return;
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lbCap.textContent = img.alt;
+    lb.classList.add("show");
+    document.body.style.overflow = "hidden";
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && lb.classList.contains("show")) closeLightbox();
+  });
+
+  // ---------- Init ----------
+  renderProducts();
+  renderCart();
+  renderFloatCart();
+  document.querySelector('.pay-opt[data-m="dana"]').classList.add("checked");
+  document.querySelector('.fulfil-opt[data-f="antar"]').classList.add("checked");
+  renderRating();
+})();
+</script>
+</body>
+</html>
